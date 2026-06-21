@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+
+sqlalchemy
+psycopg[binary]
+pgvector
+
+alembic
+
+pydantic-settings
+
+python-multipart
+
+pytest
+ruff
