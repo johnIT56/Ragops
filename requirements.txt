@@ -6,10 +6,18 @@ psycopg[binary]
 pgvector
 
 alembic
-
 pydantic-settings
-
 python-multipart
+
+
+langchain
+langchain-openai
+langchain-community
+langchain-text-splitters
+
+pypdf
+tiktoken
+openai
 
 pytest
 ruff
