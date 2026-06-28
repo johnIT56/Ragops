@@ -3,12 +3,15 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class ChunkService:
 
-    @staticmethod
-    def split(text: str):
-
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=100
+    def __init__(
+        self,
+        chunk_size: int = 500,
+        chunk_overlap: int = 100,
+    ):
+        self.splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
         )
 
-        return splitter.split_text(text)
+    def split(self, text: str) -> list[str]:
+        return self.splitter.split_text(text)
