@@ -5,21 +5,24 @@ from core.config import settings
 
 class GenerationService:
 
-    def __init__(self):
+    def __init__(
+        self,
+        model: str = "gpt-4.1-mini",
+    ):
+        self.model = model
 
         self.client = OpenAI(
-            api_key=settings.OPENAI_API_KEY
+            api_key=settings.OPENAI_API_KEY,
         )
 
     def generate(
         self,
-        question,
-        context,
-        model="gpt-4.1-mini",
-    ):
+        question: str,
+        context: str,
+    ) -> str:
 
         prompt = f"""
-Answer only using the supplied context.
+Answer ONLY using the provided context.
 
 Context:
 
@@ -31,7 +34,7 @@ Question:
 """
 
         response = self.client.chat.completions.create(
-            model=model,
+            model=self.model,
             messages=[
                 {
                     "role": "user",

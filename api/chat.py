@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from core.dependencies import get_db
-from services.retrieval_service import RetrievalService
+from schemas.chat import AskRequest, AskResponse
+from services.rag_service import RagService
 
 router = APIRouter(
     prefix="/chat",
@@ -11,28 +11,14 @@ router = APIRouter(
 )
 
 
-class AskRequest(BaseModel):
-    question: str
-    top_k: int = 5
-
-
-class AskResponse(BaseModel):
-    answer: str
-    context: list[str]
-
-
-@router.post(
-    "/ask",
-    response_model=AskResponse,
-)
-def ask_question(
+@router.post("/ask", response_model=AskResponse)
+def ask(
     request: AskRequest,
     db: Session = Depends(get_db),
 ):
+    rag_service = RagService()
 
-    service = RetrievalService()
-
-    answer, context = service.answer_question(
+    answer, context = rag_service.ask(
         db=db,
         question=request.question,
         top_k=request.top_k,

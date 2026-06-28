@@ -1,25 +1,36 @@
+from sqlalchemy.orm import Session
+
+from services.embedding_service import EmbeddingService
+from services.generation_service import GenerationService
+from services.retrieval_service import RetrievalService
+
+
 class RagService:
 
     def __init__(self):
 
-        self.retrieval = RetrievalService()
+        embedding = EmbeddingService()
 
-        self.generation = GenerationService()
+        self.retriever = RetrievalService(embedding)
+
+        self.generator = GenerationService()
 
     def ask(
         self,
-        db,
-        question,
+        db: Session,
+        question: str,
+        top_k: int = 5,
     ):
 
-        chunks = self.retrieval.retrieve_chunks(
-            db,
-            question,
+        chunks = self.retriever.retrieve_chunks(
+            db=db,
+            question=question,
+            top_k=top_k,
         )
 
         context = "\n\n".join(chunks)
 
-        answer = self.generation.generate(
+        answer = self.generator.generate(
             question,
             context,
         )
