@@ -12,7 +12,6 @@ class ChunkRepository:
         chunks,
         embeddings,
     ):
-
         objects = []
 
         for idx, (text, vector) in enumerate(zip(chunks, embeddings)):
@@ -29,3 +28,18 @@ class ChunkRepository:
         db.commit()
 
         return objects
+
+    def find_similar(
+        self,
+        db: Session,
+        embedding: list[float],
+        top_k: int = 5,
+    ):
+        return (
+            db.query(Chunk)
+            .order_by(
+                Chunk.embedding.cosine_distance(embedding)
+            )
+            .limit(top_k)
+            .all()
+        )

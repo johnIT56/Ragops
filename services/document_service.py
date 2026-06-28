@@ -19,10 +19,12 @@ class DocumentService:
         document_repo: DocumentRepository | None = None,
         chunk_repo: ChunkRepository | None = None,
         embedding_service: EmbeddingService | None = None,
+        chunk_service: ChunkService | None = None,
     ):
         self.document_repo = document_repo or DocumentRepository()
         self.chunk_repo = chunk_repo or ChunkRepository()
         self.embedding_service = embedding_service or EmbeddingService()
+        self.chunk_service = chunk_service or ChunkService()
 
     def ingest_pdf(self, db: Session, file):
 
@@ -31,9 +33,9 @@ class DocumentService:
         try:
             text = load_pdf(temp_path)
 
-            chunks = ChunkService.split(text)
+            chunks = self.chunk_service.split(text)
 
-            embeddings = self.embedding_service.embed(chunks)
+            embeddings = self.embedding_service.embed_documents(chunks)
 
             document = self.document_repo.create(
                 db=db,
