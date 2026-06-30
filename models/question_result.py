@@ -22,7 +22,7 @@ class QuestionResult(Base):
 
     answer: Mapped[str]
 
-    retrieved_context: Mapped[str]
+    contexts: Mapped[str]
 
     latency: Mapped[float]
 

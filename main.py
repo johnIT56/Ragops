@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from api.documents import router as documents_router
 from api.chat import router as chat_router
+from api.experiments import router as experiments_router
 
 from core.database import Base, engine
 
@@ -10,7 +11,7 @@ from models.document import Document
 from models.chunk import Chunk
 from models.experiment import Experiment
 from models.experiment_run import ExperimentRun
-from models.question import EvaluationQuestion
+from models.evaluation_question import EvaluationQuestion
 
 app = FastAPI(
     title="RAGOps",
@@ -27,3 +28,4 @@ def startup():
 
 app.include_router(documents_router)
 app.include_router(chat_router)
+app.include_router(experiments_router)
