@@ -3,7 +3,7 @@ uvicorn[standard]
 
 sqlalchemy
 psycopg[binary]
-pgvector
+pgvector>=0.3.0
 
 alembic
 pydantic-settings

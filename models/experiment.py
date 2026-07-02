@@ -33,3 +33,9 @@ class Experiment(Base):
         back_populates="experiment",
         cascade="all, delete-orphan"
     )
+
+    questions = relationship(
+        "EvaluationQuestion",
+        back_populates="experiment",
+        cascade="all, delete-orphan"
+    )

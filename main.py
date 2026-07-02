@@ -12,6 +12,7 @@ from models.chunk import Chunk
 from models.experiment import Experiment
 from models.experiment_run import ExperimentRun
 from models.evaluation_question import EvaluationQuestion
+from api.questions import router as questions_router
 
 app = FastAPI(
     title="RAGOps",
@@ -29,3 +30,4 @@ def startup():
 app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(experiments_router)
+app.include_router(questions_router)
