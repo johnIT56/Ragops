@@ -14,12 +14,15 @@ class RetrievalService:
         self.embedding_service = embedding_service
         self.chunk_repository = chunk_repository or ChunkRepository()
 
-    def retrieve_chunks(
+    def retrieve(
         self,
         db: Session,
         question: str,
         top_k: int = 5,
     ) -> list[str]:
+        """
+        Retrieve the top-k most relevant chunks for a question.
+        """
 
         embedding = self.embedding_service.embed_query(question)
 

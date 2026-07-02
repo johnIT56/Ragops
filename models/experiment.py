@@ -16,10 +16,11 @@ class Experiment(Base):
         default=uuid.uuid4
     )
 
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(nullable=False)
 
     config: Mapped[dict] = mapped_column(
-        JSONB
+        JSONB,
+        nullable=False
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -29,5 +30,12 @@ class Experiment(Base):
 
     runs = relationship(
         "ExperimentRun",
-        back_populates="experiment"
+        back_populates="experiment",
+        cascade="all, delete-orphan"
+    )
+
+    questions = relationship(
+        "EvaluationQuestion",
+        back_populates="experiment",
+        cascade="all, delete-orphan"
     )

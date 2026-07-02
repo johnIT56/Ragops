@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.base import Base
 
@@ -15,6 +15,11 @@ class EvaluationQuestion(Base):
         default=uuid.uuid4
     )
 
+    experiment_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("experiments.id"),
+        nullable=False
+    )
+
     question: Mapped[str]
 
     ground_truth: Mapped[str]
@@ -22,4 +27,9 @@ class EvaluationQuestion(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    experiment = relationship(
+        "Experiment",
+        back_populates="questions"
     )
