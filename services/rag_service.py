@@ -22,7 +22,7 @@ class RagService:
         top_k: int = 5,
     ):
 
-        chunks = self.retriever.retrieve_chunks(
+        chunks = self.retriever.retrieve(
             db=db,
             question=question,
             top_k=top_k,

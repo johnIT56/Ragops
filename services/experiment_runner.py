@@ -9,19 +9,20 @@ from repositories.experiment_run_repository import ExperimentRunRepository
 from repositories.question_repository import QuestionRepository
 from repositories.question_result_repository import QuestionResultRepository
 
+from services.embedding_service import EmbeddingService
 from services.evaluation_service import EvaluationService
 from services.generation_service import GenerationService
 from services.retrieval_service import RetrievalService
-from services.embedding_service import EmbeddingService
+
 
 class ExperimentRunner:
 
     def __init__(self):
 
-        self.embedding_service = EmbeddingService()
+        embedding_service = EmbeddingService()
 
         self.retrieval_service = RetrievalService(
-            embedding_service=self.embedding_service
+            embedding_service=embedding_service,
         )
 
         self.generation_service = GenerationService()
@@ -43,7 +44,9 @@ class ExperimentRunner:
         )
 
         if not questions:
-            raise ValueError("No evaluation questions found for this experiment.")
+            raise ValueError(
+                "No evaluation questions found for this experiment."
+            )
 
         run = ExperimentRun(
             experiment_id=experiment.id,
@@ -61,6 +64,8 @@ class ExperimentRunner:
 
         metrics_list = []
 
+        top_k = experiment.config.get("top_k", 5)
+
         for question in questions:
 
             start = time.perf_counter()
@@ -68,7 +73,7 @@ class ExperimentRunner:
             contexts = self.retrieval_service.retrieve(
                 db=db,
                 question=question.question,
-                top_k=experiment.top_k,
+                top_k=top_k,
             )
 
             answer = self.generation_service.generate(
@@ -88,7 +93,7 @@ class ExperimentRunner:
 
             result = QuestionResult(
                 run_id=run.id,
-                question_id=question.id,
+                question=question.question,
                 answer=answer,
                 contexts="\n\n".join(contexts),
                 latency=metrics["latency"],
@@ -126,7 +131,11 @@ class ExperimentRunner:
         return run
 
     @staticmethod
-    def _average(metrics: list[dict], key: str) -> float:
+    def _average(
+        metrics: list[dict],
+        key: str,
+    ) -> float:
+
         if not metrics:
             return 0.0
 

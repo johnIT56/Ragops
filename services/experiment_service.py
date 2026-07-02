@@ -24,10 +24,15 @@ class ExperimentService:
             config=config,
         )
 
-        return self.experiment_repo.create(
+        experiment = self.experiment_repo.create(
             db=db,
             experiment=experiment,
         )
+
+        db.commit()
+        db.refresh(experiment)
+
+        return experiment
 
     def list(
         self,

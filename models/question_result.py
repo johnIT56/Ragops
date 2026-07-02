@@ -11,7 +11,7 @@ class QuestionResult(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True,
-        default=uuid.uuid4
+        default=uuid.uuid4,
     )
 
     run_id: Mapped[uuid.UUID] = mapped_column(
@@ -36,5 +36,5 @@ class QuestionResult(Base):
 
     run = relationship(
         "ExperimentRun",
-        back_populates="results"
+        back_populates="results",
     )
