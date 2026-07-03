@@ -11,6 +11,10 @@ from schemas.experiment_runs import ExperimentRunResponse
 
 from services.run_service import RunService
 
+from schemas.run_comparison import (
+    RunComparisonResponse,
+)
+
 router = APIRouter(
     prefix="/runs",
     tags=["runs"],
@@ -45,4 +49,20 @@ def get_run(
     return service.get(
         db=db,
         run_id=run_id,
+    )
+
+@router.get(
+    "/compare",
+    response_model=RunComparisonResponse,
+)
+def compare_runs(
+    run1: str,
+    run2: str,
+    db: Session = Depends(get_db),
+):
+
+    return service.compare(
+        db=db,
+        run1_id=run1,
+        run2_id=run2,
     )
