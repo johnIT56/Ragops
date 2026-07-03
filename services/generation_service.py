@@ -6,11 +6,16 @@ from core.config import settings
 
 class GenerationService:
 
-    def __init__(self):
+    def __init__(
+        self,
+        model: str | None = None,
+        temperature: float = 0.0,
+    ):
+
         self.llm = ChatOpenAI(
             api_key=settings.OPENAI_API_KEY,
-            model=settings.OPENAI_CHAT_MODEL,
-            temperature=0,
+            model=model or settings.OPENAI_CHAT_MODEL,
+            temperature=temperature,
         )
 
     def generate(
