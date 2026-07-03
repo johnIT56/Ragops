@@ -19,13 +19,6 @@ class ExperimentRunner:
 
     def __init__(self):
 
-        embedding_service = EmbeddingService()
-
-        self.retrieval_service = RetrievalService(
-            embedding_service=embedding_service,
-        )
-
-        self.generation_service = GenerationService()
         self.evaluation_service = EvaluationService()
 
         self.question_repo = QuestionRepository()
@@ -37,6 +30,27 @@ class ExperimentRunner:
         db: Session,
         experiment,
     ) -> ExperimentRun:
+
+        embedding_service = EmbeddingService(
+            model=experiment.config.get(
+                "embedding_model",
+            ),
+        )
+
+        retrieval_service = RetrievalService(
+            embedding_service=embedding_service,
+        )
+
+        generation_service = GenerationService(
+            model=experiment.config.get(
+                "llm_model",
+            ),
+        )
+
+        top_k = experiment.config.get(
+            "top_k",
+            5,
+        )
 
         questions = self.question_repo.find_by_experiment(
             db=db,
@@ -64,19 +78,17 @@ class ExperimentRunner:
 
         metrics_list = []
 
-        top_k = experiment.config.get("top_k", 5)
-
         for question in questions:
 
             start = time.perf_counter()
 
-            contexts = self.retrieval_service.retrieve(
+            contexts = retrieval_service.retrieve(
                 db=db,
                 question=question.question,
                 top_k=top_k,
             )
 
-            answer = self.generation_service.generate(
+            answer = generation_service.generate(
                 question=question.question,
                 contexts=contexts,
             )
@@ -110,8 +122,14 @@ class ExperimentRunner:
 
             metrics_list.append(metrics)
 
-        run.avg_latency = self._average(metrics_list, "latency")
-        run.avg_faithfulness = self._average(metrics_list, "faithfulness")
+        run.avg_latency = self._average(
+            metrics_list,
+            "latency",
+        )
+        run.avg_faithfulness = self._average(
+            metrics_list,
+            "faithfulness",
+        )
         run.avg_answer_relevancy = self._average(
             metrics_list,
             "answer_relevancy",
@@ -139,4 +157,7 @@ class ExperimentRunner:
         if not metrics:
             return 0.0
 
-        return sum(m[key] for m in metrics) / len(metrics)
+        return sum(
+            metric[key]
+            for metric in metrics
+        ) / len(metrics)
