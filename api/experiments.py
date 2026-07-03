@@ -10,6 +10,14 @@ from schemas.experiments import (
     ExperimentResponse,
 )
 
+
+from services.experiment_service import ExperimentService
+from schemas.experiment_runs import (
+    ExperimentRunResponse,
+)
+
+
+
 from services.experiment_service import ExperimentService
 from services.experiment_runner import ExperimentRunner
 
@@ -59,4 +67,18 @@ def run_experiment(
     return runner.run(
         db=db,
         experiment=experiment,
+    )
+
+@router.get(
+    "/{experiment_id}/runs",
+    response_model=list[ExperimentRunResponse],
+)
+def list_runs(
+    experiment_id: UUID,
+    db: Session = Depends(get_db),
+):
+
+    return service.get_runs(
+        db=db,
+        experiment_id=experiment_id,
     )
