@@ -15,3 +15,17 @@ class QuestionResultRepository:
         db.flush()
 
         return result
+    
+    def find_by_run(
+        self,
+        db: Session,
+        run_id,
+    ) -> list[QuestionResult]:
+
+        return (
+            db.query(QuestionResult)
+            .filter(
+                QuestionResult.run_id == run_id
+            )
+            .all()
+        )
