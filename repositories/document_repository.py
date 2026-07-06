@@ -22,3 +22,35 @@ class DocumentRepository:
         db.refresh(document)
 
         return document
+    
+    def list(
+        self,
+        db: Session,
+    ) -> list[Document]:
+
+        return (
+            db.query(Document)
+            .order_by(Document.uploaded_at.desc())
+            .all()
+        )
+
+    def get_by_id(
+        self,
+        db: Session,
+        document_id,
+    ) -> Document | None:
+
+        return (
+            db.query(Document)
+            .filter(Document.id == document_id)
+            .first()
+        )
+
+    def delete(
+        self,
+        db: Session,
+        document: Document,
+    ):
+
+        db.delete(document)
+        

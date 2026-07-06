@@ -3,6 +3,7 @@ import tempfile
 
 from sqlalchemy.orm import Session
 
+from models import document
 from repositories.document_repository import DocumentRepository
 from repositories.chunk_repository import ChunkRepository
 
@@ -10,7 +11,7 @@ from services.chunk_service import ChunkService
 from services.embedding_service import EmbeddingService
 
 from utils.pdf_loader import load_pdf
-
+from uuid import UUID
 
 class DocumentService:
 
@@ -64,3 +65,31 @@ class DocumentService:
         ) as temp_file:
             temp_file.write(file.file.read())
             return temp_file.name
+        
+    def list(
+        self,
+        db: Session,
+    ):
+
+        return self.document_repo.list(db)
+    
+    def delete(
+        self,
+        db: Session,
+        document_id: UUID,
+    ):
+
+        document = self.document_repo.get_by_id(
+          db=db,
+          document_id=document_id,
+       )
+
+        if document is None:
+            raise ValueError("Document not found.")
+
+        self.document_repo.delete(
+            db=db,
+            document=document,
+        )
+
+        db.commit()
