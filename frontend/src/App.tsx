@@ -21,6 +21,7 @@ export default function App() {
                 <Route path="/experiments" element={<ExperimentsPage />} />
                 <Route path="/runs" element={<RunsPage />} />
                 <Route path="/compare" element={<ComparePage />} />
+                <Route path="/chat" element={<ChatPage />} />
             </Routes>
         </BrowserRouter>
     );

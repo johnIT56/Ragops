@@ -1,16 +1,25 @@
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useRef,
+    useState,
+    type ChangeEvent,
+} from "react";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
 
 import {
     getDocuments,
     deleteDocument,
+    uploadDocument,
     type Document,
 } from "../../api/documents";
 
 export default function DocumentsPage() {
     const [documents, setDocuments] = useState<Document[]>([]);
     const [loading, setLoading] = useState(true);
+    const [uploading, setUploading] = useState(false);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const loadDocuments = async () => {
         try {
@@ -37,6 +46,27 @@ export default function DocumentsPage() {
         await loadDocuments();
     };
 
+    const handleUpload = async (
+        event: ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+
+        if (!file) return;
+
+        try {
+            setUploading(true);
+
+            await uploadDocument(file);
+
+            await loadDocuments();
+
+            // Allow selecting the same file again
+            event.target.value = "";
+        } finally {
+            setUploading(false);
+        }
+    };
+
     return (
         <DashboardLayout>
             <div className="flex items-center justify-between mb-8">
@@ -44,18 +74,36 @@ export default function DocumentsPage() {
                     Documents
                 </h1>
 
-                <button
-                    className="
-                        rounded-lg
-                        bg-blue-600
-                        px-4
-                        py-2
-                        text-white
-                        hover:bg-blue-700
-                    "
-                >
-                    Upload PDF
-                </button>
+                <>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf"
+                        hidden
+                        onChange={handleUpload}
+                    />
+
+                    <button
+                        onClick={() =>
+                            fileInputRef.current?.click()
+                        }
+                        disabled={uploading}
+                        className="
+                            rounded-lg
+                            bg-blue-600
+                            px-4
+                            py-2
+                            text-white
+                            hover:bg-blue-700
+                            disabled:bg-gray-400
+                            disabled:cursor-not-allowed
+                        "
+                    >
+                        {uploading
+                            ? "Uploading..."
+                            : "Upload PDF"}
+                    </button>
+                </>
             </div>
 
             {loading ? (
