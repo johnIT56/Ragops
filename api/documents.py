@@ -11,6 +11,10 @@ from services.document_service import (
     DocumentService
 )
 
+from schemas.documents import DocumentResponse
+
+from uuid import UUID
+
 router = APIRouter(
     prefix="/documents",
     tags=["documents"]
@@ -32,5 +36,30 @@ def upload_document(
     return {
         "document_id": str(document.id),
         "filename": document.filename
+    }
+
+@router.get(
+    "/",
+    response_model=list[DocumentResponse],
+)
+def list_documents(
+    db: Session = Depends(get_db),
+):
+
+    return service.list(db)
+
+@router.delete("/{document_id}")
+def delete_document(
+    document_id: UUID,
+    db: Session = Depends(get_db),
+):
+
+    service.delete(
+        db=db,
+        document_id=document_id,
+    )
+
+    return {
+        "message": "Document deleted successfully."
     }
 
