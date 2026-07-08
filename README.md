@@ -237,9 +237,9 @@ http://localhost:8000/docs
 * [x] Evaluation question management
 * [x] Automated RAG evaluation
 * [x] Experiment run tracking
-* [ ] Experiment history
-* [ ] Run comparison
-* [ ] Evaluation dashboard
+* [x] Experiment history
+* [x] Run comparison
+* [x] Evaluation dashboard
 * [ ] Background workers
 * [ ] Authentication
 * [ ] Frontend (React/Next.js)
