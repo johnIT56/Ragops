@@ -4,12 +4,14 @@ interface Props {
     experiment: Experiment;
     onRun: (id: string) => void;
     onViewRuns: (id: string) => void;
+    onCompare: (id: string) => void;
 }
 
 export default function ExperimentCard({
     experiment,
     onRun,
     onViewRuns,
+    onCompare,
 }: Props) {
 
     return (
@@ -105,6 +107,24 @@ export default function ExperimentCard({
                     >
 
                         View Runs
+
+                    </button>
+
+                    <button
+                        onClick={() =>
+                            onCompare(experiment.id)
+                        }
+                        className="
+                            rounded-lg
+                            bg-indigo-600
+                            px-4
+                            py-2
+                            text-white
+                            hover:bg-indigo-700
+                        "
+                    >
+
+                        Compare Runs
 
                     </button>
 
