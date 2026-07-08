@@ -76,6 +76,16 @@ export default function ExperimentsPage() {
 
     };
 
+    const handleCompare = (
+        id: string,
+    ) => {
+
+        navigate(
+            `/experiments/${id}/compare`
+        );
+
+    };
+
     return (
 
         <DashboardLayout>
@@ -172,6 +182,7 @@ export default function ExperimentsPage() {
                             experiment={experiment}
                             onRun={handleRun}
                             onViewRuns={handleViewRuns}
+                            onCompare={handleCompare}
                         />
 
                     ))}
