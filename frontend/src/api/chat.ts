@@ -10,9 +10,10 @@ export async function askQuestion(
 ): Promise<ChatResponse> {
 
     const response = await api.post(
-        "/chat",
+        "/chat/ask",
         {
             question,
+            top_k: 5,
         }
     );
 

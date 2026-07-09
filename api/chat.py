@@ -26,5 +26,5 @@ def ask(
 
     return AskResponse(
         answer=answer,
-        context=context,
+        contexts=context,
     )

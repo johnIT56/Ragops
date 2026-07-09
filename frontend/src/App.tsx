@@ -23,7 +23,6 @@ export default function App() {
                 <Route path="/experiments" element={<ExperimentsPage />} />
                 <Route path="/runs" element={<RunsPage />} />
                 <Route path="/compare" element={<ComparePage />} />
-                <Route path="/chat" element={<ChatPage />} />
                 <Route path="/experiments/:experimentId/runs" element={<RunsPage />} />
                 <Route path="/runs/:runId" element={<RunDetailsPage />} />
                 <Route path="/experiments/:experimentId/compare" element={<CompareRunsPage />} />

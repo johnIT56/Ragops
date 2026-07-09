@@ -8,4 +8,4 @@ class AskRequest(BaseModel):
 
 class AskResponse(BaseModel):
     answer: str
-    context: list[str]
+    contexts: list[str]
