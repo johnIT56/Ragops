@@ -14,6 +14,7 @@ from services.evaluation_service import EvaluationService
 from services.generation_service import GenerationService
 from services.retrieval_service import RetrievalService
 
+from fastapi import HTTPException
 
 class ExperimentRunner:
 
@@ -58,8 +59,12 @@ class ExperimentRunner:
         )
 
         if not questions:
-            raise ValueError(
+            raise HTTPException(
+                status_code=400,
+                detail=
                 "No evaluation questions found for this experiment."
+                "Please add evaluation questions before running."
+
             )
 
         run = ExperimentRun(

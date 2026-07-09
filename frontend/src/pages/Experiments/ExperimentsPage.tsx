@@ -12,6 +12,9 @@ import {
 import ExperimentCard from "../../components/ExperimentCard";
 import CreateExperimentModal from "../../components/CreateExperimentModal";
 
+import axios from "../../api/axios";
+
+
 export default function ExperimentsPage() {
 
     const navigate = useNavigate();
@@ -58,13 +61,25 @@ export default function ExperimentsPage() {
 
             alert("Experiment completed successfully.");
 
-        } catch {
+        } catch (error) {
 
-            alert("Failed to run experiment.");
+            console.error(error)
 
-        }
+            if (axios.isAxiosError(error)) {
 
-    };
+                alert(
+                    error.response?.data?.detail ??
+                   "Failed to run experiment.");
+        } else {
+
+                alert(
+                    "Failed to run experiment."
+                );
+            }
+
+            }
+
+        };
 
     const handleViewRuns = (
         id: string,

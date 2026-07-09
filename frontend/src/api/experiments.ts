@@ -31,12 +31,24 @@ export async function getExperiments() {
 export async function createExperiment(
     experiment: ExperimentCreate
 ) {
+
     const response = await api.post(
         "/experiments",
-        experiment
+        {
+            name: experiment.name,
+            config: {
+                embedding_model: experiment.embedding_model,
+                llm_model: experiment.llm_model,
+                top_k: experiment.top_k,
+                temperature: experiment.temperature,
+                chunk_size: experiment.chunk_size,
+                chunk_overlap: experiment.chunk_overlap,
+            },
+        }
     );
 
     return response.data;
+
 }
 
 export async function runExperiment(id: string) {
