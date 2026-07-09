@@ -20,13 +20,14 @@ router = APIRouter(
     tags=["documents"]
 )
 
+service = DocumentService()
+
 @router.post("/upload")
 def upload_document(
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
 
-    service = DocumentService()
 
     document = service.ingest_pdf(
         db,
