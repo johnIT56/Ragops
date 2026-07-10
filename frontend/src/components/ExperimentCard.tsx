@@ -3,6 +3,7 @@ import type { Experiment } from "../api/experiments";
 interface Props {
     experiment: Experiment;
     onRun: (id: string) => void;
+    onQuestions: (id: string) => void;
     onViewRuns: (id: string) => void;
     onCompare: (id: string) => void;
 }
@@ -10,6 +11,7 @@ interface Props {
 export default function ExperimentCard({
     experiment,
     onRun,
+    onQuestions,
     onViewRuns,
     onCompare,
 }: Props) {
@@ -89,6 +91,26 @@ export default function ExperimentCard({
                     >
 
                         ▶ Run
+
+                    </button>
+
+                    <button
+                        onClick={() =>
+                            onQuestions(
+                                experiment.id
+                            )
+                        }
+                        className="
+                            rounded-lg
+                            bg-blue-600
+                            px-4
+                            py-2
+                            text-white
+                            hover:bg-blue-700
+                        "
+                    >
+
+                        Questions
 
                     </button>
 

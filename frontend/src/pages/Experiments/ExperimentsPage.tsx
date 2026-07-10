@@ -101,6 +101,16 @@ export default function ExperimentsPage() {
 
     };
 
+    const handleQuestions = (
+        id: string,
+    ) => {
+
+        navigate(
+            `/experiments/${id}/questions`
+        );
+
+    };
+
     return (
 
         <DashboardLayout>
@@ -196,6 +206,7 @@ export default function ExperimentsPage() {
                             key={experiment.id}
                             experiment={experiment}
                             onRun={handleRun}
+                            onQuestions={handleQuestions}
                             onViewRuns={handleViewRuns}
                             onCompare={handleCompare}
                         />

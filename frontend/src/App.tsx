@@ -12,6 +12,7 @@ import RunsPage from "./pages/Runs/RunsPage";
 import ComparePage from "./pages/Compare/ComparePage";
 import RunDetailsPage from "./pages/Runs/RunDetailsPage";
 import CompareRunsPage from "./pages/CompareRuns/CompareRunsPage";
+import EvaluationQuestionsPage from "./pages/questions/EvaluationQuestionsPage";
 
 export default function App() {
     return (
@@ -26,6 +27,7 @@ export default function App() {
                 <Route path="/experiments/:experimentId/runs" element={<RunsPage />} />
                 <Route path="/runs/:runId" element={<RunDetailsPage />} />
                 <Route path="/experiments/:experimentId/compare" element={<CompareRunsPage />} />
+                <Route path="/experiments/:experimentId/questions" element={<EvaluationQuestionsPage />} />
             </Routes>
         </BrowserRouter>
     );
