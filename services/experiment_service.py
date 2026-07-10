@@ -8,6 +8,7 @@ from repositories.experiment_run_repository import (
 )
 
 from schemas.experiments import ExperimentCreate
+from repositories.question_repository import QuestionRepository
 
 
 class ExperimentService:
@@ -15,7 +16,8 @@ class ExperimentService:
     def __init__(self):
         self.experiment_repo = ExperimentRepository()
         self.experiment_run_repo = ExperimentRunRepository()
-
+        self.question_repo = QuestionRepository()
+        
     def create(
         self,
         db: Session,
@@ -75,6 +77,22 @@ class ExperimentService:
         )
 
         return self.experiment_run_repo.find_by_experiment(
+            db=db,
+            experiment_id=experiment_id,
+        )
+
+    def get_questions(
+        self,
+        db: Session,
+        experiment_id,
+    ):
+
+        self.get(
+            db=db,
+            experiment_id=experiment_id,
+        )
+
+        return self.question_repo.find_by_experiment(
             db=db,
             experiment_id=experiment_id,
         )
