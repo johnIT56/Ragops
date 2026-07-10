@@ -2,14 +2,17 @@ import type { Experiment } from "../api/experiments";
 
 interface Props {
     experiment: Experiment;
+    runningId: string | null;
     onRun: (id: string) => void;
     onQuestions: (id: string) => void;
     onViewRuns: (id: string) => void;
     onCompare: (id: string) => void;
+    
 }
 
 export default function ExperimentCard({
     experiment,
+    runningId,
     onRun,
     onQuestions,
     onViewRuns,
@@ -78,6 +81,7 @@ export default function ExperimentCard({
                 <div className="flex flex-col gap-3">
 
                     <button
+                        disabled={runningId === experiment.id}
                         onClick={() =>
                             onRun(experiment.id)
                         }
@@ -87,12 +91,15 @@ export default function ExperimentCard({
                             px-4
                             py-2
                             text-white
+                            disabled:bg-gray-400
+                            disabled:cursor-not-allowed
                         "
                     >
-
-                        ▶ Run
-
+                        {runningId === experiment.id
+                            ? "Running..."
+                            : "▶ Run"}
                     </button>
+                        
 
                     <button
                         onClick={() =>

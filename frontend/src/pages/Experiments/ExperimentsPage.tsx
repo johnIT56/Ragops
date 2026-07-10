@@ -28,6 +28,9 @@ export default function ExperimentsPage() {
     const [showCreateModal, setShowCreateModal] =
         useState(false);
 
+    const [runningId, setRunningId] =
+    useState<string | null>(null);
+
     const loadExperiments = async () => {
 
         try {
@@ -57,6 +60,8 @@ export default function ExperimentsPage() {
 
         try {
 
+            setRunningId(id);
+
             await runExperiment(id);
 
             alert("Experiment completed successfully.");
@@ -77,7 +82,9 @@ export default function ExperimentsPage() {
                 );
             }
 
-            }
+            } finally {
+
+            setRunningId(null);}
 
         };
 
@@ -205,6 +212,7 @@ export default function ExperimentsPage() {
                         <ExperimentCard
                             key={experiment.id}
                             experiment={experiment}
+                            runningId={runningId}
                             onRun={handleRun}
                             onQuestions={handleQuestions}
                             onViewRuns={handleViewRuns}
