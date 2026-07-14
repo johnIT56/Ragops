@@ -1,20 +1,30 @@
 import time
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from models.experiment_run import ExperimentRun
 from models.question_result import QuestionResult
 
-from repositories.experiment_run_repository import ExperimentRunRepository
-from repositories.question_repository import QuestionRepository
-from repositories.question_result_repository import QuestionResultRepository
+from repositories.experiment_run_repository import (
+    ExperimentRunRepository,
+)
+from repositories.question_repository import (
+    QuestionRepository,
+)
+from repositories.question_result_repository import (
+    QuestionResultRepository,
+)
+
+from schemas.evaluation import EvaluationInput
 
 from services.embedding_service import EmbeddingService
-from services.evaluation_service import EvaluationService
+from services.evaluation.evaluation_service import (
+    EvaluationService,
+)
 from services.generation_service import GenerationService
 from services.retrieval_service import RetrievalService
 
-from fastapi import HTTPException
 
 class ExperimentRunner:
 
@@ -61,10 +71,10 @@ class ExperimentRunner:
         if not questions:
             raise HTTPException(
                 status_code=400,
-                detail=
-                "No evaluation questions found for this experiment."
-                "Please add evaluation questions before running."
-
+                detail=(
+                    "No evaluation questions found for this experiment. "
+                    "Please add evaluation questions before running."
+                ),
             )
 
         run = ExperimentRun(
@@ -100,12 +110,16 @@ class ExperimentRunner:
 
             latency = time.perf_counter() - start
 
-            metrics = self.evaluation_service.evaluate(
+            payload = EvaluationInput(
                 question=question.question,
                 answer=answer,
                 ground_truth=question.ground_truth,
                 contexts=contexts,
                 latency=latency,
+            )
+
+            metrics = self.evaluation_service.evaluate(
+                payload=payload,
             )
 
             result = QuestionResult(
@@ -131,18 +145,22 @@ class ExperimentRunner:
             metrics_list,
             "latency",
         )
+
         run.avg_faithfulness = self._average(
             metrics_list,
             "faithfulness",
         )
+
         run.avg_answer_relevancy = self._average(
             metrics_list,
             "answer_relevancy",
         )
+
         run.avg_context_precision = self._average(
             metrics_list,
             "context_precision",
         )
+
         run.avg_context_recall = self._average(
             metrics_list,
             "context_recall",

@@ -1,7 +1,6 @@
 from langchain_core.messages import HumanMessage
-from langchain_openai import ChatOpenAI
 
-from core.config import settings
+from services.ai.llm_provider import LLMProvider
 
 
 class GenerationService:
@@ -12,11 +11,12 @@ class GenerationService:
         temperature: float = 0.0,
     ):
 
-        self.llm = ChatOpenAI(
-            api_key=settings.OPENAI_API_KEY,
-            model=model or settings.OPENAI_CHAT_MODEL,
+        provider = LLMProvider(
+            model=model,
             temperature=temperature,
         )
+
+        self.llm = provider.get()
 
     def generate(
         self,
